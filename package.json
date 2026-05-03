@@ -1,0 +1,13 @@
+{
+  "name": "intellifusion-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step needed for Python FastAPI backend'",
+    "start": "vercel start"
+  },
+  "dependencies": {
+    "@vercel/python": "^1.3.7"
+  }
+}
