@@ -1,0 +1,672 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Anshin-sec | Dashboard</title>
+<meta name="description" content="Anshin-sec SecureAI Enterprise Dashboard - Monitoring, Users, and System Health.">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "primary":"#006c49","on-primary":"#ffffff","primary-container":"#10b981",
+        "secondary":"#0058be","secondary-container":"#2170e4","on-secondary-container":"#fefcff",
+        "background":"#f8f9ff","on-background":"#0b1c30","surface":"#f8f9ff",
+        "on-surface":"#0b1c30","on-surface-variant":"#3c4a42",
+        "surface-container":"#e5eeff","outline":"#6c7a71",
+        "error":"#ba1a1a","on-error":"#ffffff",
+        "sidebar-bg":"#ffffff","sidebar-hover":"#f1f5f9","sidebar-active":"#ecfdf5"
+      },
+      fontFamily: { sans: ["Inter"] }
+    }
+  }
+}
+</script>
+<style>
+.glass-card{background:rgba(255,255,255,0.7);backdrop-filter:blur(12px);border:1px solid #F1F5F9}
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+.custom-scrollbar::-webkit-scrollbar{width:4px}
+.custom-scrollbar::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:10px}
+.fade-in{animation:fadeIn .4s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse-ring{0%{transform:scale(.8);opacity:1}100%{transform:scale(2.2);opacity:0}}
+.pulse-ring{animation:pulse-ring 1.5s ease-out infinite}
+.stat-card{transition:transform .2s,box-shadow .2s}
+.stat-card:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,108,73,0.08)}
+#login-overlay{transition:opacity 0.3s ease}
+#login-overlay.hidden{opacity:0;pointer-events:none}
+.nav-item{transition:all .15s ease}
+.nav-item:hover{background:#f1f5f9;color:#0f172a}
+.nav-item.active{background:#ecfdf5;color:#006c49;font-weight:600}
+.bg-gradient-radial{background:radial-gradient(circle at center,var(--tw-gradient-stops))}
+</style>
+</head>
+<body class="bg-[#f4f7fb] font-sans text-on-background overflow-hidden relative">
+
+<!-- Background Glow Elements -->
+<div class="absolute bottom-0 left-[200px] w-[800px] h-[600px] bg-emerald-300/30 blur-[120px] rounded-full pointer-events-none z-0"></div>
+<div class="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-200/30 blur-[100px] rounded-full pointer-events-none z-0"></div>
+
+<!-- LOGIN OVERLAY -->
+<div id="login-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-[#f4f9f6] to-[#e2f1e8] backdrop-blur-sm overflow-y-auto">
+  <div class="w-full max-w-[1100px] mx-auto flex flex-col md:flex-row items-center justify-between gap-12 p-8 min-h-screen">
+    
+    <!-- Left Column -->
+    <div class="flex-1 max-w-lg space-y-8 animate-[fadeIn_0.5s_ease-out]">
+      <div class="flex items-center gap-3 text-[#00422b]">
+        <span class="material-symbols-outlined text-[36px]" style="font-variation-settings: 'FILL' 0, 'wght' 600;">shield_person</span>
+        <span class="text-[42px] font-extrabold tracking-tight">Anshin-sec</span>
+      </div>
+      <p class="text-2xl font-semibold text-[#3c4a42] leading-snug">
+        Next-generation intelligence for enterprise security governance.
+      </p>
+      <div class="relative w-full rounded-3xl overflow-hidden shadow-2xl mt-8 border border-white/40">
+        <img src="/login_abstract.png" alt="Abstract data" class="w-full h-auto object-cover opacity-90" />
+      </div>
+      <div class="flex items-center gap-4 mt-8">
+        <div class="flex -space-x-3">
+          <div class="w-8 h-8 rounded-full bg-slate-300 border-2 border-[#eef6f1]"></div>
+          <div class="w-8 h-8 rounded-full bg-slate-400 border-2 border-[#eef6f1]"></div>
+          <div class="w-8 h-8 rounded-full bg-slate-500 border-2 border-[#eef6f1]"></div>
+        </div>
+        <span class="text-sm font-medium text-[#3c4a42]">Trusted by 500+ global enterprises.</span>
+      </div>
+    </div>
+
+    <div class="w-full max-w-[440px] bg-white rounded-[2rem] shadow-xl p-10 relative z-10 animate-[fadeIn_0.6s_ease-out]">
+      <!-- LOGIN FORM -->
+      <div id="login-form">
+        <h2 class="text-[28px] font-bold text-slate-900 mb-2">Executive Login</h2>
+        <p class="text-[15px] text-slate-500 mb-8">Access your security dashboard.</p>
+        
+        <div class="space-y-5">
+          <div>
+            <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">Username</label>
+            <div class="relative">
+              <input id="login-user" type="text" placeholder="your_username" value="admin" class="w-full px-4 py-3.5 bg-[#f8fbf9] border border-slate-200 rounded-xl text-slate-900 focus:ring-2 focus:ring-primary focus:border-primary focus:bg-white transition-colors pl-4 pr-10 text-[15px]">
+              <span class="material-symbols-outlined absolute right-3.5 top-3.5 text-slate-400 pointer-events-none text-[20px]">person</span>
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">Password</label>
+            <div class="relative">
+              <input id="login-pass" type="password" placeholder="••••••••" value="admin123" class="w-full px-4 py-3.5 bg-[#f8fbf9] border border-slate-200 rounded-xl text-slate-900 focus:ring-2 focus:ring-primary focus:border-primary focus:bg-white transition-colors pl-4 pr-10 text-[15px] tracking-[0.2em]">
+              <span class="material-symbols-outlined absolute right-3.5 top-3.5 text-slate-400 cursor-pointer hover:text-slate-600 text-[20px]" onclick="togglePassword(this)">visibility</span>
+            </div>
+          </div>
+          
+          <div class="flex items-center justify-between pt-1">
+            <label class="flex items-center gap-2 cursor-pointer group">
+              <input type="checkbox" class="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary bg-slate-50">
+              <span class="text-sm font-medium text-slate-600 group-hover:text-slate-800 transition-colors">Remember me</span>
+            </label>
+            <a href="#" class="text-sm font-medium text-primary hover:text-emerald-700 hover:underline transition-colors">Forgot password?</a>
+          </div>
+          
+          <button id="login-btn" onclick="doLogin()" class="w-full py-3.5 bg-primary text-white rounded-xl font-semibold text-[15px] hover:bg-emerald-800 active:scale-[0.98] transition-all shadow-lg shadow-emerald-900/20 mt-4">
+            Sign In
+          </button>
+          <p id="login-error" class="text-center text-sm text-red-500 hidden mt-2"></p>
+          <p id="login-success" class="text-center text-sm text-emerald-600 hidden mt-2"></p>
+          
+          <div class="flex items-center gap-3 my-6 pt-2">
+            <div class="flex-1 h-px bg-slate-100"></div>
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Or continue with</span>
+            <div class="flex-1 h-px bg-slate-100"></div>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <button class="flex items-center justify-center gap-2 py-2.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors bg-white">
+              <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.58c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.58-2.77c-.98.66-2.23 1.06-3.7 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+              <span class="text-sm font-semibold text-slate-700">Google</span>
+            </button>
+            <button class="flex items-center justify-center gap-2 py-2.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors bg-white">
+              <svg class="w-4 h-4" viewBox="0 0 21 21"><path fill="#f35325" d="M1 1h9v9H1z"/><path fill="#81bc06" d="M11 1h9v9h-9z"/><path fill="#05a6f0" d="M1 11h9v9H1z"/><path fill="#ffba08" d="M11 11h9v9h-9z"/></svg>
+              <span class="text-sm font-semibold text-slate-700">Microsoft</span>
+            </button>
+          </div>
+          
+          <div class="mt-8 text-center pt-2">
+            <span class="text-[13px] text-slate-500">Don't have an account? </span>
+            <a href="#" onclick="showSignUp(event)" class="text-[13px] font-bold text-primary hover:text-emerald-800 hover:underline transition-colors">Sign Up</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIGN UP FORM -->
+      <div id="signup-form" class="hidden">
+        <h2 class="text-[28px] font-bold text-slate-900 mb-2">Create Account</h2>
+        <p class="text-[15px] text-slate-500 mb-8">Join the SecureAI platform.</p>
+        
+        <div class="space-y-5">
+          <div>
+            <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">Username</label>
+            <div class="relative">
+              <input id="reg-user" type="text" placeholder="johndoe" class="w-full px-4 py-3.5 bg-[#f8fbf9] border border-slate-200 rounded-xl text-slate-900 focus:ring-2 focus:ring-primary focus:border-primary focus:bg-white transition-colors pl-4 pr-10 text-[15px]">
+              <span class="material-symbols-outlined absolute right-3.5 top-3.5 text-slate-400 pointer-events-none text-[20px]">person</span>
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">Email Address</label>
+            <div class="relative">
+              <input id="reg-email" type="email" placeholder="john@company.com" class="w-full px-4 py-3.5 bg-[#f8fbf9] border border-slate-200 rounded-xl text-slate-900 focus:ring-2 focus:ring-primary focus:border-primary focus:bg-white transition-colors pl-4 pr-10 text-[15px]">
+              <span class="material-symbols-outlined absolute right-3.5 top-3.5 text-slate-400 pointer-events-none text-[20px]">mail</span>
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">Role</label>
+            <div class="relative">
+              <select id="reg-role" class="w-full px-4 py-3.5 bg-[#f8fbf9] border border-slate-200 rounded-xl text-slate-900 focus:ring-2 focus:ring-primary focus:border-primary focus:bg-white transition-colors pl-4 pr-10 text-[15px] appearance-none">
+                <option value="employee">Employee</option>
+                <option value="intern">Intern</option>
+                <option value="admin">Admin</option>
+              </select>
+              <span class="material-symbols-outlined absolute right-3.5 top-3.5 text-slate-400 pointer-events-none text-[20px]">expand_more</span>
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">Password</label>
+            <div class="relative">
+              <input id="reg-pass" type="password" placeholder="Min 6 characters" class="w-full px-4 py-3.5 bg-[#f8fbf9] border border-slate-200 rounded-xl text-slate-900 focus:ring-2 focus:ring-primary focus:border-primary focus:bg-white transition-colors pl-4 pr-10 text-[15px] tracking-[0.2em]">
+              <span class="material-symbols-outlined absolute right-3.5 top-3.5 text-slate-400 cursor-pointer hover:text-slate-600 text-[20px]" onclick="toggleRegPassword(this)">visibility</span>
+            </div>
+          </div>
+          
+          <button id="reg-btn" onclick="doRegister()" class="w-full py-3.5 bg-primary text-white rounded-xl font-semibold text-[15px] hover:bg-emerald-800 active:scale-[0.98] transition-all shadow-lg shadow-emerald-900/20 mt-4">
+            Create Account
+          </button>
+          <p id="reg-error" class="text-center text-sm text-red-500 hidden mt-2"></p>
+          <p id="reg-success" class="text-center text-sm text-emerald-600 hidden mt-2"></p>
+          
+          <div class="mt-8 text-center pt-2">
+            <span class="text-[13px] text-slate-500">Already have an account? </span>
+            <a href="#" onclick="showLogin(event)" class="text-[13px] font-bold text-primary hover:text-emerald-800 hover:underline transition-colors">Sign In</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Badges -->
+  <div class="absolute bottom-8 flex items-center justify-center w-full z-10">
+    <div class="flex items-center gap-2 px-5 py-2.5 bg-white/70 backdrop-blur-md rounded-full text-[11px] font-bold tracking-[0.1em] text-[#3c4a42] shadow-sm border border-white/50 uppercase">
+      <span class="material-symbols-outlined text-[16px] text-emerald-600">verified_user</span>
+      SOC2 Type II Compliant · AES-256 Encryption
+    </div>
+  </div>
+</div>
+
+<div class="flex h-screen relative z-10">
+
+<!-- ═══ LEFT SIDEBAR ═══ -->
+<aside class="w-[220px] h-full bg-sidebar-bg border-r border-slate-200/60 flex flex-col z-30 flex-shrink-0">
+  <!-- Logo -->
+  <div class="px-5 pt-6 pb-6">
+    <div class="flex items-center gap-2.5">
+      <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-md shadow-emerald-900/15">
+        <span class="material-symbols-outlined text-white text-[18px]">shield</span>
+      </div>
+      <div>
+        <div class="text-base font-bold tracking-tight text-slate-800 leading-tight">SecureAI</div>
+        <div class="text-[9px] font-bold tracking-[0.15em] text-slate-500 uppercase">Enterprise Policy</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="flex-1 px-3 py-2 space-y-1">
+    <a href="/dashboard" class="nav-item active flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm">
+      <span class="material-symbols-outlined text-[20px] text-emerald-600" style="font-variation-settings: 'FILL' 1">grid_view</span> Dashboard
+    </a>
+    
+    <a href="/documents" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-600 font-medium">
+      <span class="material-symbols-outlined text-[20px]">description</span> Documents
+    </a>
+    <a href="/chat" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-600 font-medium">
+      <span class="material-symbols-outlined text-[20px]">chat</span> Chat
+    </a>
+    <a href="/policies" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-600 font-medium">
+      <span class="material-symbols-outlined text-[20px]">security</span> Security Policies
+    </a>
+    <a href="/compliance" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-600 font-medium">
+      <span class="material-symbols-outlined text-[20px]">verified_user</span> Compliance
+    </a>
+    <a href="/audit-logs" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-600 font-medium">
+      <span class="material-symbols-outlined text-[20px]">history</span> Audit Logs
+    </a>
+    <a href="/team-access" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-600 font-medium">
+      <span class="material-symbols-outlined text-[20px]">person</span> Team Access
+    </a>
+  </nav>
+
+  <!-- Sidebar Bottom -->
+  <div class="px-3 pb-6 space-y-2">
+    <button class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-colors active:scale-[0.98] shadow-md shadow-emerald-900/10">
+      Upgrade Security
+    </button>
+    <a href="#" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-600 font-medium mt-2">
+      <span class="material-symbols-outlined text-[20px]">settings</span> Settings
+    </a>
+    <a href="#" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-600 font-medium">
+      <span class="material-symbols-outlined text-[20px]">help_outline</span> Support
+    </a>
+  </div>
+</aside>
+
+<!-- ═══ MAIN CONTENT AREA ═══ -->
+<div class="flex-1 flex flex-col overflow-hidden">
+
+  <!-- Top Bar -->
+  <header class="h-16 flex items-center justify-between px-8 flex-shrink-0 z-20">
+    <!-- Breadcrumb -->
+    <div class="flex items-center gap-2 text-sm">
+      <span class="font-semibold text-slate-800 text-lg">Dashboard</span>
+    </div>
+    <!-- Search & Actions -->
+    <div class="flex items-center gap-4">
+      <div class="relative hidden md:block">
+        <span class="material-symbols-outlined text-[18px] text-slate-400 absolute left-3 top-1/2 -translate-y-1/2">search</span>
+        <input type="text" placeholder="Search resources..." class="w-64 pl-10 pr-4 py-2 rounded-xl bg-white/60 border border-slate-200/60 text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all shadow-sm">
+      </div>
+      <span id="user-role-badge" class="hidden md:block text-xs font-semibold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100"></span>
+      <button class="p-2 rounded-xl text-slate-500 hover:bg-white/60 hover:text-slate-800 transition-all relative" title="Notifications">
+        <span class="material-symbols-outlined text-[20px]">notifications_none</span>
+      </button>
+      <button onclick="doLogout()" class="p-2 rounded-xl text-slate-500 hover:bg-white/60 hover:text-slate-800 transition-all" title="Logout">
+        <span class="material-symbols-outlined text-[20px]">logout</span>
+      </button>
+      <div class="h-8 w-8 rounded-full overflow-hidden cursor-pointer" id="user-avatar-wrap">
+        <img src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff" alt="User" class="w-full h-full object-cover" id="user-avatar-img">
+      </div>
+    </div>
+  </header>
+
+  <!-- Dashboard Content -->
+  <main class="flex-1 overflow-y-auto custom-scrollbar p-6">
+<div class="max-w-7xl mx-auto p-6 space-y-6 pb-20">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between fade-in">
+    <div>
+      <h1 class="text-2xl font-bold text-on-surface">System Dashboard</h1>
+      <p class="text-sm text-slate-500 mt-1">Real-time monitoring &amp; analytics</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <div id="health-badge" class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold border">
+        <span class="relative flex h-2.5 w-2.5"><span class="pulse-ring absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span></span>
+        <span id="health-text">Checking...</span>
+      </div>
+      <button onclick="refreshDashboard()" class="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-emerald-600 hover:border-emerald-200 transition-all active:scale-95" title="Refresh">
+        <span class="material-symbols-outlined text-[20px]">refresh</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Stat Cards Row -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 fade-in" style="animation-delay:.1s">
+    <div class="stat-card glass-card rounded-2xl p-5 space-y-3">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Requests</span>
+        <div class="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center"><span class="material-symbols-outlined text-emerald-600 text-[20px]">query_stats</span></div>
+      </div>
+      <div class="text-3xl font-black text-on-surface" id="s-requests">—</div>
+      <div class="text-xs text-slate-400">Since server start</div>
+    </div>
+    <div class="stat-card glass-card rounded-2xl p-5 space-y-3">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Tokens</span>
+        <div class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center"><span class="material-symbols-outlined text-blue-600 text-[20px]">token</span></div>
+      </div>
+      <div class="text-3xl font-black text-on-surface" id="s-tokens">—</div>
+      <div class="flex items-center gap-2 text-xs"><span class="text-slate-400">Prompt:</span><span id="s-prompt-tok" class="font-medium">—</span><span class="text-slate-300">|</span><span class="text-slate-400">Completion:</span><span id="s-comp-tok" class="font-medium">—</span></div>
+    </div>
+    <div class="stat-card glass-card rounded-2xl p-5 space-y-3">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Cost</span>
+        <div class="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center"><span class="material-symbols-outlined text-amber-600 text-[20px]">payments</span></div>
+      </div>
+      <div class="text-3xl font-black text-emerald-600" id="s-cost">—</div>
+      <div class="text-xs text-slate-400" id="s-avg-tok">Avg tokens/req: —</div>
+    </div>
+    <div class="stat-card glass-card rounded-2xl p-5 space-y-3">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Avg Latency</span>
+        <div class="w-9 h-9 rounded-xl bg-purple-50 flex items-center justify-center"><span class="material-symbols-outlined text-purple-600 text-[20px]">speed</span></div>
+      </div>
+      <div class="text-3xl font-black text-on-surface" id="s-latency">—</div>
+      <div class="flex items-center gap-2 text-xs"><span class="text-slate-400">P95:</span><span id="s-p95" class="font-medium">—</span><span class="text-slate-300">|</span><span class="text-slate-400">Max:</span><span id="s-max-lat" class="font-medium">—</span></div>
+    </div>
+  </div>
+
+  <!-- Two Column: Latency Chart + Users -->
+  <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 fade-in" style="animation-delay:.2s">
+
+    <!-- Latency Bars -->
+    <div class="lg:col-span-3 glass-card rounded-2xl p-6 space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="font-semibold text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[20px]">monitoring</span> Latency Breakdown</h2>
+        <span class="text-xs text-slate-400">Per endpoint</span>
+      </div>
+      <div id="latency-bars" class="space-y-3">
+        <div class="text-sm text-slate-400 text-center py-8">No latency data yet</div>
+      </div>
+    </div>
+
+    <!-- Users -->
+    <div class="lg:col-span-2 glass-card rounded-2xl p-6 space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="font-semibold text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[20px]">group</span> Users</h2>
+        <span id="user-count" class="text-xs text-slate-400">0 users</span>
+      </div>
+      <div id="users-list" class="space-y-2 max-h-64 overflow-y-auto custom-scrollbar">
+        <div class="text-sm text-slate-400 text-center py-8">Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Usage Table -->
+  <div class="glass-card rounded-2xl p-6 space-y-4 fade-in" style="animation-delay:.3s">
+    <div class="flex items-center justify-between">
+      <h2 class="font-semibold text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[20px]">history</span> Recent API Usage</h2>
+      <span id="usage-count" class="text-xs text-slate-400"></span>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="text-left text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-100">
+            <th class="pb-3 pr-4">Time</th>
+            <th class="pb-3 pr-4">Model</th>
+            <th class="pb-3 pr-4 text-right">Prompt</th>
+            <th class="pb-3 pr-4 text-right">Completion</th>
+            <th class="pb-3 pr-4 text-right">Total</th>
+            <th class="pb-3 text-right">Cost</th>
+          </tr>
+        </thead>
+        <tbody id="usage-table" class="divide-y divide-slate-50">
+          <tr><td colspan="6" class="py-8 text-center text-slate-400">No usage data yet</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Health Details -->
+  <div class="glass-card rounded-2xl p-6 space-y-4 fade-in" style="animation-delay:.4s">
+    <h2 class="font-semibold text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[20px]">health_and_safety</span> Health Details</h2>
+    <div id="health-details" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="bg-white rounded-xl border border-slate-100 p-4 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center"><span class="material-symbols-outlined text-emerald-600">check_circle</span></div>
+        <div><div class="text-xs text-slate-400">Status</div><div id="h-status" class="font-semibold text-on-surface">—</div></div>
+      </div>
+      <div class="bg-white rounded-xl border border-slate-100 p-4 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center"><span class="material-symbols-outlined text-blue-600">schedule</span></div>
+        <div><div class="text-xs text-slate-400">Last Check</div><div id="h-time" class="font-semibold text-on-surface text-sm">—</div></div>
+      </div>
+      <div class="bg-white rounded-xl border border-slate-100 p-4 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center"><span class="material-symbols-outlined text-amber-600">warning</span></div>
+        <div><div class="text-xs text-slate-400">Issues</div><div id="h-issues" class="font-semibold text-on-surface">—</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</main>
+</div>
+</div>
+
+<script>
+const API = window.location.origin;
+let token = null;
+
+// Restore session from localStorage on page load
+(function restoreSession() {
+  const saved = localStorage.getItem('anshin_token');
+  const savedUser = localStorage.getItem('anshin_user');
+  if (saved && savedUser) {
+    token = saved;
+    try {
+      const u = JSON.parse(savedUser);
+      document.getElementById('user-avatar-img').src = `https://ui-avatars.com/api/?name=${u.username}&background=0D8ABC&color=fff`;
+      document.getElementById('user-role-badge').textContent = u.roles[0]||'user';
+    } catch(_) {}
+    document.getElementById('login-overlay').classList.add('hidden');
+    refreshDashboard();
+  }
+})();
+
+function togglePassword(icon) {
+  const input = document.getElementById('login-pass');
+  if (input.type === 'password') {
+    input.type = 'text';
+    input.classList.remove('tracking-[0.2em]');
+    icon.textContent = 'visibility_off';
+  } else {
+    input.type = 'password';
+    input.classList.add('tracking-[0.2em]');
+    icon.textContent = 'visibility';
+  }
+}
+
+function toggleRegPassword(icon) {
+  const input = document.getElementById('reg-pass');
+  if (input.type === 'password') {
+    input.type = 'text';
+    input.classList.remove('tracking-[0.2em]');
+    icon.textContent = 'visibility_off';
+  } else {
+    input.type = 'password';
+    input.classList.add('tracking-[0.2em]');
+    icon.textContent = 'visibility';
+  }
+}
+
+function showSignUp(e) {
+  e.preventDefault();
+  document.getElementById('login-form').classList.add('hidden');
+  document.getElementById('signup-form').classList.remove('hidden');
+  document.getElementById('login-error').classList.add('hidden');
+  document.getElementById('login-success').classList.add('hidden');
+}
+
+function showLogin(e) {
+  e.preventDefault();
+  document.getElementById('signup-form').classList.add('hidden');
+  document.getElementById('login-form').classList.remove('hidden');
+  document.getElementById('reg-error').classList.add('hidden');
+  document.getElementById('reg-success').classList.add('hidden');
+}
+
+async function doRegister() {
+  const username = document.getElementById('reg-user').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const password = document.getElementById('reg-pass').value;
+  const role = document.getElementById('reg-role').value;
+  const errEl = document.getElementById('reg-error');
+  const successEl = document.getElementById('reg-success');
+  errEl.classList.add('hidden');
+  successEl.classList.add('hidden');
+
+  if (!username || !email || !password) {
+    errEl.textContent = 'Please fill in all fields.';
+    errEl.classList.remove('hidden');
+    return;
+  }
+  if (password.length < 6) {
+    errEl.textContent = 'Password must be at least 6 characters.';
+    errEl.classList.remove('hidden');
+    return;
+  }
+
+  const btn = document.getElementById('reg-btn');
+  btn.disabled = true;
+  btn.textContent = 'Creating...';
+
+  try {
+    const res = await fetch(`${API}/api/v1/auth/register`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({username, email, password, role})
+    });
+    if (!res.ok) {
+      let errMsg = 'Registration failed';
+      try { const errData = await res.json(); errMsg = errData.detail || errMsg; } catch(_) {}
+      throw new Error(errMsg);
+    }
+    successEl.textContent = 'Account created! Switching to login...';
+    successEl.classList.remove('hidden');
+    setTimeout(() => {
+      document.getElementById('signup-form').classList.add('hidden');
+      document.getElementById('login-form').classList.remove('hidden');
+      document.getElementById('login-user').value = username;
+      document.getElementById('login-pass').value = '';
+      const loginSuccess = document.getElementById('login-success');
+      loginSuccess.textContent = 'Registration successful! Please sign in.';
+      loginSuccess.classList.remove('hidden');
+    }, 1200);
+  } catch(e) {
+    errEl.textContent = e.message;
+    errEl.classList.remove('hidden');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Create Account';
+  }
+}
+
+async function doLogin() {
+  const user = document.getElementById('login-user').value;
+  const pass = document.getElementById('login-pass').value;
+  const errEl = document.getElementById('login-error');
+  errEl.classList.add('hidden');
+  try {
+    const res = await fetch(`${API}/api/v1/auth/login`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({username:user, password:pass})
+    });
+    if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.detail||'Login failed'); }
+    const data = await res.json();
+    token = data.access_token;
+    localStorage.setItem('anshin_token', token);
+    localStorage.setItem('anshin_user', JSON.stringify(data.user));
+    document.getElementById('user-avatar-img').src = `https://ui-avatars.com/api/?name=${data.user.username}&background=0D8ABC&color=fff`;
+    document.getElementById('user-role-badge').textContent = data.user.roles[0]||'user';
+    document.getElementById('login-overlay').classList.add('hidden');
+    refreshDashboard();
+  } catch(e) { errEl.textContent=e.message; errEl.classList.remove('hidden'); }
+}
+
+function doLogout() { token=null; localStorage.removeItem('anshin_token'); localStorage.removeItem('anshin_user'); document.getElementById('login-overlay').classList.remove('hidden'); }
+
+async function apiFetch(url) {
+  const res = await fetch(`${API}${url}`, { headers:{'Authorization':`Bearer ${token}`} });
+  if (!res.ok) throw new Error(`${res.status}`);
+  return res.json();
+}
+
+async function refreshDashboard() {
+  if (!token) return;
+  try { await Promise.all([loadDashboardData(), loadHealth(), loadUsers()]); } catch(e) { console.error(e); }
+}
+
+async function loadDashboardData() {
+  const d = await apiFetch('/api/v1/monitoring/dashboard');
+  const c = d.cost||{};
+  document.getElementById('s-requests').textContent = (c.total_requests||0).toLocaleString();
+  document.getElementById('s-tokens').textContent = (c.total_tokens||0).toLocaleString();
+  document.getElementById('s-prompt-tok').textContent = (c.total_prompt_tokens||0).toLocaleString();
+  document.getElementById('s-comp-tok').textContent = (c.total_completion_tokens||0).toLocaleString();
+  document.getElementById('s-cost').textContent = '$'+(c.total_cost_usd||0).toFixed(4);
+  document.getElementById('s-avg-tok').textContent = 'Avg tokens/req: '+(c.avg_tokens_per_request||0);
+
+  // Latency
+  const lat = d.latency||{};
+  const entries = Object.entries(lat);
+  if (entries.length) {
+    const maxVal = Math.max(...entries.map(([,v])=>v.max_ms||0), 1);
+    document.getElementById('latency-bars').innerHTML = entries.map(([ep, v]) => {
+      const avgPct = Math.min((v.avg_ms/maxVal)*100, 100);
+      const p95Pct = Math.min((v.p95_ms/maxVal)*100, 100);
+      return `<div class="space-y-1.5">
+        <div class="flex items-center justify-between"><span class="text-xs font-medium text-slate-600">${ep}</span><span class="text-xs text-slate-400">${v.count} calls</span></div>
+        <div class="flex items-center gap-3">
+          <div class="flex-1 bg-slate-100 rounded-full h-2.5 overflow-hidden relative">
+            <div class="absolute inset-y-0 left-0 bg-purple-200 rounded-full" style="width:${p95Pct}%"></div>
+            <div class="absolute inset-y-0 left-0 bg-emerald-500 rounded-full" style="width:${avgPct}%"></div>
+          </div>
+          <span class="text-xs font-mono font-medium text-slate-600 w-20 text-right">${v.avg_ms.toFixed(0)}ms avg</span>
+        </div>
+        <div class="flex gap-4 text-[11px] text-slate-400">
+          <span>Min: ${v.min_ms.toFixed(0)}ms</span><span>P50: ${v.p50_ms.toFixed(0)}ms</span><span>P95: ${v.p95_ms.toFixed(0)}ms</span><span>Max: ${v.max_ms.toFixed(0)}ms</span>
+        </div>
+      </div>`;
+    }).join('');
+    const first = entries[0][1];
+    document.getElementById('s-latency').textContent = (first.avg_ms||0).toFixed(0)+'ms';
+    document.getElementById('s-p95').textContent = (first.p95_ms||0).toFixed(0)+'ms';
+    document.getElementById('s-max-lat').textContent = (first.max_ms||0).toFixed(0)+'ms';
+  }
+
+  // Recent usage table
+  const usage = d.recent_usage||[];
+  document.getElementById('usage-count').textContent = usage.length+' records';
+  if (usage.length) {
+    document.getElementById('usage-table').innerHTML = usage.map(u => {
+      const t = new Date(u.timestamp);
+      const time = t.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      return `<tr class="hover:bg-slate-50/50 transition-colors">
+        <td class="py-2.5 pr-4 text-slate-500 font-mono text-xs">${time}</td>
+        <td class="py-2.5 pr-4"><span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-md text-xs font-medium">${u.model}</span></td>
+        <td class="py-2.5 pr-4 text-right font-mono">${u.prompt_tokens.toLocaleString()}</td>
+        <td class="py-2.5 pr-4 text-right font-mono">${u.completion_tokens.toLocaleString()}</td>
+        <td class="py-2.5 pr-4 text-right font-mono font-medium">${u.total_tokens.toLocaleString()}</td>
+        <td class="py-2.5 text-right font-mono text-emerald-600">$${u.estimated_cost_usd.toFixed(6)}</td>
+      </tr>`;
+    }).join('');
+  }
+}
+
+async function loadHealth() {
+  const h = await apiFetch('/api/v1/monitoring/health');
+  const badge = document.getElementById('health-badge');
+  const isHealthy = h.status === 'healthy';
+  badge.className = `flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold border ${isHealthy ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-amber-50 border-amber-200 text-amber-700'}`;
+  document.getElementById('health-text').textContent = h.status.charAt(0).toUpperCase()+h.status.slice(1);
+  document.getElementById('h-status').textContent = h.status.charAt(0).toUpperCase()+h.status.slice(1);
+  document.getElementById('h-time').textContent = new Date(h.timestamp).toLocaleString();
+  document.getElementById('h-issues').textContent = h.issues.length ? h.issues.join(', ') : 'None';
+}
+
+async function loadUsers() {
+  try {
+    const users = await apiFetch('/api/v1/admin/users');
+    document.getElementById('user-count').textContent = users.length+' users';
+    document.getElementById('users-list').innerHTML = users.map(u => {
+      const colors = {admin:'emerald',manager:'blue',analyst:'purple',intern:'amber'};
+      const role = u.roles[0]||'user';
+      const c = colors[role]||'slate';
+      return `<div class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-100 hover:border-emerald-100 transition-colors">
+        <div class="w-9 h-9 rounded-full bg-${c}-100 flex items-center justify-center text-${c}-700 text-xs font-bold">${u.username[0].toUpperCase()}</div>
+        <div class="flex-1 min-w-0">
+          <div class="font-medium text-sm text-on-surface truncate">${u.username}</div>
+          <div class="text-xs text-slate-400 truncate">${u.email}</div>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-${c}-50 text-${c}-700 border border-${c}-100">${role}</span>
+          <span class="w-2 h-2 rounded-full ${u.is_active ? 'bg-emerald-400':'bg-slate-300'}"></span>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    document.getElementById('users-list').innerHTML = '<div class="text-sm text-slate-400 text-center py-4">Admin access required</div>';
+  }
+}
+
+// Auto-refresh every 30s
+setInterval(() => { if(token) refreshDashboard(); }, 30000);
+</script>
+</body></html>
