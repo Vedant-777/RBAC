@@ -54,7 +54,7 @@ def api_login(body: LoginRequest, db: Database = Depends(get_db)):
 @auth_router.post("/register", response_model=MessageResponse)
 def api_register(body: RegisterRequest, db: Database = Depends(get_db)):
     logger.info("Registration request: username=%s, role=%s", body.username, body.role)
-    if body.role not in ["employee", "intern"]:
+    if body.role not in ["admin", "manager", "employee", "intern"]:
         raise HTTPException(status_code=400, detail="Invalid role for public registration")
     register_user(db, body.username, body.email, body.password, role_name=body.role)
     return MessageResponse(message="Registration successful")
