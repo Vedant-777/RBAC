@@ -1,0 +1,114 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>SecureAI | Team Access</title>
+<meta name="description" content="SecureAI Enterprise Team Access - Manage team members, roles, and permissions.">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script>
+tailwind.config = { darkMode:"class",theme:{extend:{colors:{"primary":"#006c49","on-primary":"#ffffff","primary-container":"#10b981","background":"#f8f9ff","on-surface":"#0b1c30","sidebar-bg":"#f0faf5"},fontFamily:{sans:["Inter"]}}}}
+</script>
+<style>
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+.custom-scrollbar::-webkit-scrollbar{width:4px}.custom-scrollbar::-webkit-scrollbar-thumb{background:#d0e8dc;border-radius:10px}
+.fade-in{animation:fadeIn .4s ease}@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+#login-overlay{transition:opacity 0.3s ease}#login-overlay.hidden{opacity:0;pointer-events:none}
+.nav-item{transition:all .15s ease}.nav-item:hover{background:#e0f5ec;color:#006c49}.nav-item.active{background:#d0f0e4;color:#006c49;font-weight:600}
+.glass-card{background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);border:1px solid #e2e8f0}
+.member-card{transition:all .2s ease}.member-card:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,108,73,0.08)}
+</style>
+</head>
+<body class="bg-background font-sans text-on-surface overflow-hidden">
+
+<div id="login-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm">
+  <div class="glass-card rounded-2xl shadow-xl p-12 w-full max-w-sm space-y-6">
+    <div class="text-center space-y-2"><div class="flex items-center justify-center gap-2"><div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-white text-[18px]">shield</span></div><span class="text-xl font-bold tracking-tight text-emerald-600">SecureAI</span></div><p class="text-sm text-slate-500">Sign in to Enterprise Policy Manager</p></div>
+    <div class="space-y-4"><input id="login-user" type="text" placeholder="Username" value="admin" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"><input id="login-pass" type="password" placeholder="Password" value="admin123" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"><button onclick="doLogin()" class="w-full py-3 bg-primary text-on-primary rounded-xl font-semibold text-sm active:scale-[0.98] transition-transform shadow-lg shadow-emerald-900/10">Sign In</button><p id="login-error" class="text-center text-sm text-red-500 hidden"></p></div>
+  </div>
+</div>
+
+<div class="flex h-screen">
+<aside class="w-[220px] h-full bg-sidebar-bg border-r border-emerald-100 flex flex-col z-30 flex-shrink-0">
+  <div class="px-5 pt-5 pb-3"><div class="flex items-center gap-2.5"><div class="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-md shadow-emerald-900/15"><span class="material-symbols-outlined text-white text-[20px]">shield</span></div><div><div class="text-base font-bold tracking-tight text-emerald-700">SecureAI</div><div class="text-[10px] font-semibold tracking-[0.12em] text-emerald-500/70 uppercase">Enterprise Policy</div></div></div></div>
+  <nav class="flex-1 px-3 py-2 space-y-1">
+    <a href="/dashboard" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-600"><span class="material-symbols-outlined text-[20px]">dashboard</span> Dashboard</a>
+    
+    <a href="/documents" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-600 font-medium">
+      <span class="material-symbols-outlined text-[20px]">description</span> Documents
+    </a>
+    <a href="/chat" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-600"><span class="material-symbols-outlined text-[20px]">chat</span> Chat</a>
+    <a href="/policies" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-600"><span class="material-symbols-outlined text-[20px]">security</span> Security Policies</a>
+    <a href="/compliance" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-600"><span class="material-symbols-outlined text-[20px]">verified_user</span> Compliance</a>
+    <a href="/audit-logs" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-600"><span class="material-symbols-outlined text-[20px]">history</span> Audit Logs</a>
+    <a href="/team-access" class="nav-item active flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm"><span class="material-symbols-outlined text-[20px]">group</span> Team Access</a>
+  </nav>
+  <div class="px-3 pb-4 space-y-2">
+    <button class="w-full py-2.5 px-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-colors active:scale-[0.98] shadow-md shadow-emerald-900/10"><span class="material-symbols-outlined text-[18px]">upgrade</span> Upgrade Security</button>
+    <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-slate-500"><span class="material-symbols-outlined text-[18px]">settings</span> Settings</a>
+    <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-slate-500"><span class="material-symbols-outlined text-[18px]">support_agent</span> Support</a>
+  </div>
+</aside>
+
+<div class="flex-1 flex flex-col overflow-hidden">
+  <header class="h-14 bg-white/80 backdrop-blur-md border-b border-slate-200/50 flex items-center justify-between px-6 flex-shrink-0 z-20">
+    <div class="text-sm font-semibold text-on-surface">Team Access Management</div>
+    <div class="flex items-center gap-4">
+      <div class="relative hidden md:block"><span class="material-symbols-outlined text-[18px] text-slate-400 absolute left-3 top-1/2 -translate-y-1/2">search</span><input type="text" placeholder="Search members..." class="w-64 pl-10 pr-4 py-2 rounded-xl bg-slate-50 border border-slate-200 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"></div>
+      <button class="p-2 rounded-xl text-slate-400 hover:bg-slate-100 transition-all relative"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span></button>
+      <div class="h-9 w-9 rounded-full bg-emerald-600 flex items-center justify-center text-white text-sm font-bold" id="user-avatar">A</div>
+    </div>
+  </header>
+
+  <main class="flex-1 overflow-y-auto custom-scrollbar p-6">
+    <div class="max-w-6xl mx-auto space-y-6">
+      <div class="flex items-center justify-between fade-in">
+        <div><h1 class="text-2xl font-bold">Team Access</h1><p class="text-sm text-slate-500 mt-1">Manage team members, roles, and permissions.</p></div>
+        <button class="flex items-center gap-2 px-4 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold active:scale-[0.97] transition-transform shadow-lg shadow-emerald-900/10"><span class="material-symbols-outlined text-[18px]">person_add</span> Invite Member</button>
+      </div>
+
+      <!-- Role Summary -->
+      <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 fade-in" style="animation-delay:.1s">
+        <div class="glass-card rounded-2xl p-4 flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center"><span class="material-symbols-outlined text-emerald-600">admin_panel_settings</span></div><div><div class="text-xl font-bold">1</div><div class="text-xs text-slate-400">Admin</div></div></div>
+        <div class="glass-card rounded-2xl p-4 flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center"><span class="material-symbols-outlined text-blue-600">manage_accounts</span></div><div><div class="text-xl font-bold">1</div><div class="text-xs text-slate-400">Manager</div></div></div>
+        <div class="glass-card rounded-2xl p-4 flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center"><span class="material-symbols-outlined text-purple-600">analytics</span></div><div><div class="text-xl font-bold">1</div><div class="text-xs text-slate-400">Analyst</div></div></div>
+        <div class="glass-card rounded-2xl p-4 flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center"><span class="material-symbols-outlined text-amber-600">school</span></div><div><div class="text-xl font-bold">1</div><div class="text-xs text-slate-400">Intern</div></div></div>
+      </div>
+
+      <!-- Team Members -->
+      <div class="glass-card rounded-2xl p-6 space-y-4 fade-in" style="animation-delay:.2s">
+        <h2 class="font-semibold flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[20px]">groups</span> Team Members</h2>
+        <div id="team-list" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div class="member-card bg-white rounded-xl border border-slate-100 p-4 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold">A</div>
+            <div class="flex-1"><div class="font-semibold text-sm">admin</div><div class="text-xs text-slate-400">admin@intellifusion.local</div></div>
+            <div class="flex items-center gap-2"><span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-md text-xs font-semibold border border-emerald-100">admin</span><span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span></div>
+          </div>
+          <div class="member-card bg-white rounded-xl border border-slate-100 p-4 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold">M</div>
+            <div class="flex-1"><div class="font-semibold text-sm">manager1</div><div class="text-xs text-slate-400">manager@intellifusion.local</div></div>
+            <div class="flex items-center gap-2"><span class="px-2 py-0.5 bg-blue-50 text-blue-700 rounded-md text-xs font-semibold border border-blue-100">manager</span><span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span></div>
+          </div>
+          <div class="member-card bg-white rounded-xl border border-slate-100 p-4 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-700 font-bold">A</div>
+            <div class="flex-1"><div class="font-semibold text-sm">analyst1</div><div class="text-xs text-slate-400">analyst@intellifusion.local</div></div>
+            <div class="flex items-center gap-2"><span class="px-2 py-0.5 bg-purple-50 text-purple-700 rounded-md text-xs font-semibold border border-purple-100">analyst</span><span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span></div>
+          </div>
+          <div class="member-card bg-white rounded-xl border border-slate-100 p-4 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 font-bold">I</div>
+            <div class="flex-1"><div class="font-semibold text-sm">intern1</div><div class="text-xs text-slate-400">intern@intellifusion.local</div></div>
+            <div class="flex items-center gap-2"><span class="px-2 py-0.5 bg-amber-50 text-amber-700 rounded-md text-xs font-semibold border border-amber-100">intern</span><span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<script>
+const API = window.location.origin; let token = null;
+(function(){const s=localStorage.getItem('anshin_token'),u=localStorage.getItem('anshin_user');if(s&&u){token=s;try{document.getElementById('user-avatar').textContent=JSON.parse(u).username[0].toUpperCase()}catch(_){}document.getElementById('login-overlay').classList.add('hidden')}})();
+async function doLogin(){const u=document.getElementById('login-user').value,p=document.getElementById('login-pass').value,e=document.getElementById('login-error');e.classList.add('hidden');try{const r=await fetch(`${API}/api/v1/auth/login`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});if(!r.ok){const d=await r.json().catch(()=>({}));throw new Error(d.detail||'Login failed')}const d=await r.json();token=d.access_token;localStorage.setItem('anshin_token',token);localStorage.setItem('anshin_user',JSON.stringify(d.user));document.getElementById('user-avatar').textContent=d.user.username[0].toUpperCase();document.getElementById('login-overlay').classList.add('hidden')}catch(x){e.textContent=x.message;e.classList.remove('hidden')}}
+</script>
+</body></html>
